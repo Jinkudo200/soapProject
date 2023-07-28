@@ -47,6 +47,7 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <!--dependencies for java 11 from here-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -62,6 +63,7 @@
             <artifactId>jaxb-impl</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <!--dependencies for java 11 to here-->
     </dependencies>
 
     <build>

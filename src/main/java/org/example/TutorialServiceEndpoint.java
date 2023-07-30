@@ -3,7 +3,9 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import jakarta.xml.bind.JAXBElement;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -18,6 +20,8 @@ import com.wstutorial.ws.tutorialservice.StatusCode;
 import com.wstutorial.ws.tutorialservice.TutorialType;
 import com.wstutorial.ws.tutorialservice.UpdateTutorialRequest;
 import com.wstutorial.ws.tutorialservice.UpdateTutorialResponse;
+
+import javax.xml.namespace.QName;
 
 @Endpoint
 public class TutorialServiceEndpoint {
@@ -47,17 +51,24 @@ public class TutorialServiceEndpoint {
         return response;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getTutorialsRequest" )
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getTutorialsRequest")
     @ResponsePayload
-    public GetTutorialsResponse getTutorials(@RequestPayload GetTutorialsRequest request)throws Exception  {
-        ObjectFactory factory = new ObjectFactory();
-        GetTutorialsResponse response = factory.createGetTutorialsResponse();
+    public JAXBElement<TutorialList> getTutorials(@RequestPayload JAXBElement<GetTutorialsRequest> request) throws Exception {
+        TutorialList response = new TutorialList();
+        response.setTutorials(getTutorials());
 
-        List<TutorialType> tutorials = getTutorials();
+        // Create the JAXBElement for TutorialList
+        QName responseQName = new QName(NAMESPACE_URI, "getTutorialsResponse");
+        JAXBElement<TutorialList> jaxbElement = new JAXBElement<>(responseQName, TutorialList.class, response);
 
-        response.getTutorials().addAll(tutorials);
-        return response;
+        return jaxbElement;
     }
+
+
+//    private <T> JAXBElement createResponseJaxbElement(T object, Class clazz) {
+//
+//        return new JAXBElement<>(new QName(NAMESPACE_URI, clazz.getSimpleName()), clazz, object);
+//    }
 
     private List<TutorialType> getTutorials() {
         List<TutorialType> tutorials= new ArrayList<TutorialType>();
